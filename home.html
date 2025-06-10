@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ReflectMate Dashboard</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f9f8;
+      padding: 20px;
+    }
+    .card {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    .logout-btn {
+      background-color: #ff4d4f;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    h1, h2 {
+      color: #0e9277;
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to ReflectMate!</h1>
+  <p id="userEmail"></p>
+
+  <div class="card">
+    <h2>📅 Today's Reflection</h2>
+    <p id="todayReflection">Loading today's data...</p>
+  </div>
+
+  <div class="card">
+    <h2>📊 Weekly Summary</h2>
+    <p>This will show your reflection stats for the week.</p>
+    <button onclick="goToQuiz()">Take Weekly Quiz</button>
+  </div>
+
+  <div class="card">
+    <h2>👤 Profile & Settings</h2>
+    <p><a href="profile.html">Go to your profile</a></p>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <!-- Firebase Auth -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyABhKz4REq8TkO6pQRBa9VCrODA-GJHm94",
+      authDomain: "reflectmate-sd013.firebaseapp.com",
+      projectId: "reflectmate-sd013",
+      storageBucket: "reflectmate-sd013.appspot.com",
+      messagingSenderId: "662216928989",
+      appId: "1:662216928989:web:4515473d9e700245e93534"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        document.getElementById("userEmail").innerText = "Logged in as: " + user.email;
+
+        // Fetch today’s reflection
+        const today = new Date().toISOString().split('T')[0];
+        const docRef = doc(db, "users", user.uid, "reflections", today);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          document.getElementById("todayReflection").innerText = docSnap.data().text || "No entry today.";
+        } else {
+          document.getElementById("todayReflection").innerText = "No reflection added yet today.";
+        }
+
+      } else {
+        // Not logged in
+        window.location.href = "index.html";
+      }
+    });
+
+    function logout() {
+      signOut(auth).then(() => {
+        window.location.href = "index.html";
+      });
+    }
+
+    function goToQuiz() {
+      window.location.href = "quiz.html";
+    }
+  </script>
+</body>
+</html>
