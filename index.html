@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ReflectMate</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div id="app">
+    <h1>ReflectMate</h1>
+    <div id="auth-section">
+      <input type="email" id="email" placeholder="Email" />
+      <input type="password" id="password" placeholder="Password" />
+      <button onclick="login()">Login</button>
+      <button onclick="signup()">Sign Up</button>
+    </div>
+    <div id="dashboard" style="display:none;">
+      <h2>Welcome, <span id="user-email"></span></h2>
+      <textarea id="daily-input" placeholder="Write your reflection..."></textarea>
+      <button onclick="submitReflection()">Submit</button>
+      <button onclick="showWeeklyQuiz()">Weekly Quiz</button>
+      <button onclick="downloadData()">Download Backup</button>
+      <div id="quiz-section" style="display:none;">
+        <h3>Weekly Self-Reflection</h3>
+        <textarea placeholder="What do you want to improve?"></textarea>
+        <textarea placeholder="Did you challenge yourself this week?"></textarea>
+        <textarea placeholder="What are you grateful for?"></textarea>
+        <button onclick="submitQuiz()">Submit Quiz</button>
+      </div>
+      <button onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
